@@ -16,6 +16,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using SampleApplication.Database;
 using SampleApplication.Interfaces;
+using SampleApplication.Middleware;
 using SampleApplication.Services;
 
 namespace SampleApplication
@@ -57,14 +58,10 @@ namespace SampleApplication
                     };
                 });
         }
-
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
+            app.UseMiddleware<ExceptionMiddleware>();
 
             app.UseHttpsRedirection();
 
