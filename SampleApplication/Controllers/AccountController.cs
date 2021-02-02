@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -20,10 +21,13 @@ namespace SampleApplication.Controllers
 
         private readonly ITokenService tokenService;
 
-        public AccountController(DatabaseContext context, ITokenService tokenService)
+        private readonly IMapper mapper;
+
+        public AccountController(DatabaseContext context, ITokenService tokenService, IMapper mapper)
         {
             this.context = context;
             this.tokenService = tokenService;
+            this.mapper = mapper;
         }
 
         [HttpPost("register")]
@@ -34,14 +38,13 @@ namespace SampleApplication.Controllers
                 return BadRequest("Username is taken");
             }
 
+            var user = mapper.Map<AppUser>(registerDto);
+
             using var hmac = new HMACSHA512();
 
-            var user = new AppUser
-            {
-                UserName = registerDto.UserName.ToLower(),
-                PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(registerDto.Password)),
-                PasswordSalt = hmac.Key
-            };
+            user.UserName = registerDto.UserName.ToLower();
+            user.PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(registerDto.Password));
+            user.PasswordSalt = hmac.Key;
 
             context.Users.Add(user);
             await context.SaveChangesAsync();
@@ -49,7 +52,8 @@ namespace SampleApplication.Controllers
             return new UserDto
             {
                 UserName = user.UserName,
-                Token = tokenService.CreateToken(user)
+                Token = tokenService.CreateToken(user),
+                KnownAs = user.KnownAs
             };
         }
 
@@ -78,7 +82,8 @@ namespace SampleApplication.Controllers
             return new UserDto
             {
                 UserName = user.UserName,
-                Token = tokenService.CreateToken(user)
+                Token = tokenService.CreateToken(user),
+                KnownAs = user.KnownAs
             };
         }
 

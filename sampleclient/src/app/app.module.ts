@@ -1,7 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -21,6 +21,8 @@ import { MemberListComponent } from './members/member-list/member-list.component
 import { MemberCardComponent } from './members/member-card/member-card.component';
 import { JwtInterceptor } from './interceptors/jwt.interceptor';
 import { MemberEditComponent } from './members/member-edit/member-edit.component';
+import { TextInputComponent } from './forms/text-input/text-input.component';
+import { DateInputComponent } from './forms/date-input/date-input.component';
 
 
 @NgModule({
@@ -37,7 +39,9 @@ import { MemberEditComponent } from './members/member-edit/member-edit.component
     ServerErrorComponent,
     MemberListComponent,
     MemberCardComponent,
-    MemberEditComponent
+    MemberEditComponent,
+    TextInputComponent,
+    DateInputComponent
   ],
   imports: [
     BrowserModule,
@@ -45,6 +49,7 @@ import { MemberEditComponent } from './members/member-edit/member-edit.component
     HttpClientModule,
     BrowserAnimationsModule,
     FormsModule,
+    ReactiveFormsModule,
     SharedModule
   ],
   providers: [
