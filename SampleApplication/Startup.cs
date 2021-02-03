@@ -30,7 +30,11 @@ namespace SampleApplication
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.Configure<CloudinarySettings>(configuration.GetSection("CloudinarySettings"));
+
             services.AddScoped<ITokenService, TokenService>();
+            services.AddScoped<IPhotoService, PhotoService>();
+
             services.AddScoped<IUserRepository, UserRepository>();
 
             services.AddAutoMapper(typeof(AutoMapperProfiles).Assembly);
